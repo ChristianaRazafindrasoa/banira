@@ -9,12 +9,19 @@ class MyServer(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.end_headers()
-        self.wfile.write(bytes(homePageHtml(), "utf-8"))
+        if self.path == '/test':
+            self.wfile.write(bytes(testHtml(), "utf-8"))
+        else:
+            self.wfile.write(bytes(homePageHtml(), "utf-8"))
+        
+def testHtml():
+    with open('test.html', 'r') as file:
+        return file.read()
 
 def homePageHtml():
     with open('index.html', 'r') as file:
         return file.read()
-        
+    
 if __name__ == "__main__":        
     server = HTTPServer((hostName, serverPort), MyServer)
     print("Server started http://%s:%s" % (hostName, serverPort))
