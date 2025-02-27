@@ -9,17 +9,14 @@ class MyServer(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.end_headers()
-        if self.path == '/test':
-            self.wfile.write(bytes(testHtml(), "utf-8"))
+        filename = self.path[1:]
+        if filename == "":
+            self.wfile.write(bytes(fileToString("index.html"), "utf-8"))
         else:
-            self.wfile.write(bytes(homePageHtml(), "utf-8"))
+            self.wfile.write(bytes(fileToString(filename), "utf-8"))
         
-def testHtml():
-    with open('test.html', 'r') as file:
-        return file.read()
-
-def homePageHtml():
-    with open('index.html', 'r') as file:
+def fileToString(filename):
+    with open(filename, 'r') as file:
         return file.read()
     
 if __name__ == "__main__":        
