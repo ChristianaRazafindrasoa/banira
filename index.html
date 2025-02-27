@@ -4,12 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Banira</title>
+
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.js"></script>
+
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; }
+        #map { width: 100%; height: 100vh; }
+    </style>
 </head>
 <body>
     <p>Hello World, my name is Ifa.</p>
-    <script>
-        console.log("Hi");
-    </script>
-    <a href="/test">Go to test page</a>
+    <a href="/test.html">Go to test page</a>
+    <div id="map"></div>
+    <script src="/main.js"></script>
 </body>
 </html>
