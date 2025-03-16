@@ -2,7 +2,7 @@ mapboxgl.accessToken = 'pk.eyJ1IjoiY2hyaXN0aWFuYTg2IiwiYSI6ImNtN214Y2swZTBuejQyb
 const map = new mapboxgl.Map({
     container: 'map', // ID of the div where the map will be rendered
     style: 'mapbox://styles/mapbox/streets-v12', // Map style
-    center: coord, // Starting position [lng, lat] (Los Angeles)
+    center: [-18.91368,47.53613], // Starting position [lng, lat] 
     zoom: 5 // Zoom level
 });
 map.addControl(new mapboxgl.NavigationControl());
@@ -33,5 +33,49 @@ function nextButtonClicked() {
     popup.addTo(map);
     coordinateIndex = (coordinateIndex + 1) % coordinates.length;
 }
-
 nextButtonClicked();
+
+function drawLine(start, end) {
+    const route = {
+        'type': 'geojson',
+        'data': {
+            'type': 'Feature',
+            'properties': {},
+            'geometry': {
+                'type': 'LineString',
+                'coordinates': [
+                    [start.lat, start.lng], // Start point [lng, lat]
+                    [end.lat, end.lng]  // End point [lng, lat]
+                ]
+            }
+        }
+    };
+    map.addSource('route', route);
+
+    map.addLayer({
+        'id': 'route',
+        'type': 'line',
+        'source': 'route',
+        'layout': {
+            'line-join': 'round',
+            'line-cap': 'round'
+        },
+        'paint': {
+            'line-color': '#ff0000',
+            'line-width': 4
+        }
+    });
+}
+
+const response = fetch("http://localhost:8080/api/network?origin=mad")
+    .then(response => {
+        if (!response.ok) {
+            throw new Error();
+        }
+        return response.json();
+    })
+    .then(response => {
+        console.log(response);
+        console.log(response.edges);
+        drawLine(response.edges[0].start, response.edges[0].end);
+    })
