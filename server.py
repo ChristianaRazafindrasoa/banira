@@ -1,5 +1,6 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from api import API
+from search import search
 import time
 
 hostName = "localhost"
@@ -36,7 +37,8 @@ def fileToString(filename):
     with open(filename, 'r') as file:
         return file.read()
     
-if __name__ == "__main__":        
+if __name__ == "__main__":  
+    search("madagascar", 2, 25) 
     server = HTTPServer((hostName, serverPort), MyServer)
     print("Server started http://%s:%s" % (hostName, serverPort))
 
