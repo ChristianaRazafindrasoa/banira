@@ -1,7 +1,8 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from api import API
-from search import search
+from search import search, format_graph
 import time
+import json
 
 hostName = "localhost"
 serverPort = 8080
@@ -13,16 +14,15 @@ class MyServer(BaseHTTPRequestHandler):
             returnStaticPage(self)
             return
         
-        elif self.path.startswith("/api/network?origin="):
-            origin = self.path.removeprefix("/api/network?origin=")
-            json = api.getNetwork(origin)
+        elif self.path.startswith("/api/network"):
+            json = api.getNetwork()
             self.send_response(200)
             self.send_header("Content-type", "text/json")
             self.end_headers()
             self.wfile.write(bytes(json, "utf-8"))
             return
         
-        
+    
 def returnStaticPage(handler):
     handler.send_response(200)
     handler.send_header("Content-type", "text/html")
@@ -38,7 +38,9 @@ def fileToString(filename):
         return file.read()
     
 if __name__ == "__main__":  
-    search("madagascar", 2, 25) 
+    # graph = search("paris", 3, 2)
+    # d = format_graph(graph)
+    # print(json.dumps(d))
     server = HTTPServer((hostName, serverPort), MyServer)
     print("Server started http://%s:%s" % (hostName, serverPort))
 
