@@ -67,7 +67,7 @@ function drawLine(start, end) {
     });
 }
 
-const response = fetch("http://localhost:8080/api/network?origin=mad")
+const response = fetch("http://localhost:8080/api/network")
     .then(response => {
         if (!response.ok) {
             throw new Error();
@@ -75,7 +75,19 @@ const response = fetch("http://localhost:8080/api/network?origin=mad")
         return response.json();
     })
     .then(response => {
-        console.log(response);
-        console.log(response.edges);
-        drawLine(response.edges[0].start, response.edges[0].end);
+        const titles = response["graph"]["paris"];
+        titles.forEach(title => {
+            if (!(title in response["nodes"])) {
+                return;
+            }
+            let lat = response["nodes"][title]["lat"]; 
+            let lon = response["nodes"][title]["lon"];
+            //let coord = [lat, lon];
+            const popup = new mapboxgl.Popup({ offset: 25 }).setText(title);
+            marker = new mapboxgl.Marker()
+                .setLngLat([lon, lat])
+                .setPopup(popup)
+                .addTo(map);
+        });
+        //drawLine(response.edges[0].start, response.edges[0].end);
     })
